@@ -27,3 +27,9 @@ async def new_task(request: schemas.Todo,db:Session=Depends(get_db)):
     db.commit()
     db.refresh(task)
     return f'Successfully added! {task.title}'
+
+@app.delete("/todo/delete/{id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_task(id, db:Session=Depends(get_db)):
+    db.query(models.Todo).filter(models.Todo.id == id).delete(synchronize_session=False)
+    db.commit()
+    return 'Task successfully deleted'
