@@ -20,7 +20,7 @@ async def task(db:Session=Depends(get_db)):
     tasks = db.query(Todo).all()
     return tasks
 
-@app.get("/task/{id}/",status_code=status.HTTP_200_OK)
+@app.get("/tasks/{id}/",status_code=status.HTTP_200_OK)
 async def task_id(id, db:Session=Depends(get_db)):
     task_with_id = db.query(models.Todo).filter(models.Todo.id == id).first()
     if not task_with_id:
@@ -35,14 +35,14 @@ async def new_task(request: schemas.Todo,db:Session=Depends(get_db)):
     db.refresh(task)
     return f'Successfully added! {task.title}'
 
-@app.put("/todo/put/", status_code=status.HTTP_202_ACCEPTED)
+@app.put("/tasks/put/", status_code=status.HTTP_202_ACCEPTED)
 async def update_task(id, request: schemas.Todo ,db:Session=Depends(get_db)):
     task = db.query(models.Todo).filter(models.Todo.id == id)
     task.update(request)
     db.commit()
     return f'Successfully updated {task.title}'
 
-@app.delete("/todo/delete/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete("/tasks/delete/{id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_task(id, db:Session=Depends(get_db)):
     db.query(models.Todo).filter(models.Todo.id == id).delete(synchronize_session=False)
     db.commit()
