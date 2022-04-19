@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, status
+from fastapi import FastAPI, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 from .database import SessionLocal, engine
 from . import models, schemas
@@ -19,6 +19,13 @@ app = FastAPI()
 async def task(db:Session=Depends(get_db)):
     tasks = db.query(Todo).all()
     return tasks
+
+@app.get("/task/{id}/",status_code=status.HTTP_200_OK)
+async def task_id(id, db:Session=Depends(get_db)):
+    task_with_id = db.query(models.Todo).filter(models.Todo.id == id).first()
+    if not task_with_id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Task with id {id} not found")
+    return task_with_id
 
 @app.post("/tasks/new/", status_code=status.HTTP_201_CREATED)
 async def new_task(request: schemas.Todo,db:Session=Depends(get_db)):
