@@ -6,3 +6,11 @@ class Todo(BaseModel):
     text: str
     date: str
     status: str
+
+class ShowTodo(BaseModel):
+    title: str
+    text: str
+    status: str
+
+    class Config():
+        orm_mode = True

@@ -31,7 +31,7 @@ async def new_task(request: schemas.Todo,db:Session=Depends(get_db)):
 @app.put("/todo/put/", status_code=status.HTTP_202_ACCEPTED)
 async def update_task(id, request: schemas.Todo ,db:Session=Depends(get_db)):
     task = db.query(models.Todo).filter(models.Todo.id == id)
-    task.update("Updated")
+    task.update(request)
     db.commit()
     return f'Successfully updated {task.title}'
 
