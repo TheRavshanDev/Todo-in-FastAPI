@@ -20,7 +20,7 @@ async def task(db:Session=Depends(get_db)):
     tasks = db.query(Todo).all()
     return tasks
 
-@app.get("/tasks/{id}/",status_code=status.HTTP_200_OK)
+@app.get("/tasks/{id}/",status_code=status.HTTP_200_OK, response_model=schemas.ShowTodo)
 async def task_id(id, db:Session=Depends(get_db)):
     task_with_id = db.query(models.Todo).filter(models.Todo.id == id).first()
     if not task_with_id:
